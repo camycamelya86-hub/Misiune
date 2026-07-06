@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cami & Emi - Connect</title>
+    <style>
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #f8a5c2;
+            --background-color: #fff9fa;
+            --text-color: #4a4a4a;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 30px;
+        }
+
+        /* Login Screen */
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255,107,129,0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffe3e8;
+            border-radius: 25px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .login-card input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .login-card button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(255,107,129,0.3);
+        }
+
+        .error-msg {
+            color: #ff4757;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+
+        /* App Screen */
+        #appScreen {
+            display: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid #ffe3e8;
+            padding-bottom: 5px;
+        }
+
+        /* Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .day-box {
+            padding: 12px 5px;
+            background-color: #f1f2f6;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid #e4e5e9;
+            user-select: none;
+        }
+
+        .day-box .date-num {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .day-box.checked {
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: line-through;
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        /* Foto - IMAGINI REPARATE (Aici s-au aplicat schimbarile pentru claritate si incadrare) */
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 220px; /* Am marit putin inaltimea pentru un aspect mai elegant pe mobil */
+            background-color: #f1f2f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 5px;
+            border: 2px dashed #ffe3e8;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Pastreaza proportiile, umple chenarul frumos fara deformare */
+            display: block;
+        }
+
+        .upload-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Inimioara */
+        .heart-container {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .heart-button {
+            font-size: 4rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+            outline: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-height: 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ECRAN DE LOGARE -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <h2>Cami & Emi ❤️</h2>
+            <p style="font-size: 0.9rem; color: #777; margin-bottom: 20px;">Introduceți parola secretă pentru a intra în aplicație</p>
+            <input type="password" id="passwordInput" placeholder="Parola...">
+            <button onclick="checkPassword()">Intră în aplicație</button>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <!-- APLICAȚIA PROPRIU-ZISĂ -->
+    <div id="appScreen" style="display:none;">
+        <header>
+            <h1>Cami ❤️ Emi</h1>
+            <p>Misiune: 7 Iulie - 13 Iulie 2026</p>
+        </header>
+
+        <div class="container">
+            
+            <!-- 1. CALENDAR -->
+            <div class="section-card">
+                <h2>Zile de trecut în revistă</h2>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <!-- 2. FOTO DIAR -->
+            <div class="section-card">
+                <h2>Poza de azi</h2>
+                <div class="photo-section">
+                    <div>
+                        <label><strong>Cami:</strong></label>
+                        <div class="photo-preview" id="previewCami"><span>Nicio fotografie adăugată</span></div>
+                        <label class="upload-btn">
+                            Schimbă poza
+                            <input type="file" accept="image/*" onchange="uploadPhoto(this, 'Cami')">
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <label><strong>Emi:</strong></label>
+                        <div class="photo-preview" id="previewEmi"><span>Nicio fotografie adăugată</span></div>
+                        <label class="upload-btn">
+                            Schimbă poza
+                            <input type="file" accept="image/*" onchange="uploadPhoto(this, 'Emi')">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. INIMIOARĂ -->
+            <div class="section-card">
+                <h2>Trimite-i un gând</h2>
+                <div class="heart-container">
+                    <button class="heart-button" onclick="sendHeart()">❤️</button>
+                    <div class="status-message" id="statusMessage"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const CORECT_PASSWORD = "TEIUBESC2026";
+        const SYNC_URL = 'https://kvstore.psty.io/v1/baskets/cami_emi_secure_9842a7b3c21d84e2';
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === CORECT_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                localStorage.setItem('cami_emi_auth', 'true');
+                loadDataOnline();
+                setInterval(loadDataOnline, 4000);
+            } else {
+                document.getElementById('errorMsg').innerText = "Parolă incorectă! Încearcă din nou.";
+            }
+        }
+
+        if (localStorage.getItem('cami_emi_auth') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            window.addEventListener('DOMContentLoaded', () => {
+                loadDataOnline();
+                setInterval(loadDataOnline, 4000);
+            });
+        }
+
+        const missionDays = [
+            { id: "ziua1", label: "Marți", date: "7 Iul" },
+            { id: "ziua2", label: "Miercuri", date: "8 Iul" },
+            { id: "ziua3", label: "Joi", date: "9 Iul" },
+            { id: "ziua4", label: "Vineri", date: "10 Iul" },
+            { id: "ziua5", label: "Sâmbătă", date: "11 Iul" },
+            { id: "ziua6", label: "Duminică", date: "12 Iul" },
+            { id: "ziua7", label: "Luni", date: "13 Iul" }
+        ];
+
+        const calendarGrid = document.getElementById('calendarGrid');
+
+        missionDays.forEach(day => {
+            const dayBox = document.createElement('div');
+            dayBox.classList.add('day-box');
+            dayBox.id = day.id;
+            dayBox.innerHTML = `<div>${day.label}</div><div class="date-num">${day.date}</div>`;
+            
+            dayBox.addEventListener('click', () => {
+                dayBox.classList.toggle('checked');
+                saveDataOnline();
+            });
+
+            calendarGrid.appendChild(dayBox);
+        });
+
+        function saveDataOnline() {
+            let checkedIds = [];
+            missionDays.forEach(day => {
+                if(document.getElementById(day.id).classList.contains('checked')) {
+                    checkedIds.push(day.id);
+                }
+            });
+
+            const dataToSave = {
+                checked: checkedIds,
+                heartMsg: document.getElementById('statusMessage').innerText,
+                photoCami: localStorage.getItem('p_Cami') || '',
+                photoEmi: localStorage.getItem('p_Emi') || ''
+            };
+
+            fetch(SYNC_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSave)
+            }).catch(err => console.log("Eroare salvare:", err));
+        }
+
+        function loadDataOnline() {
+            fetch(SYNC_URL)
+            .then(res => res.json())
+            .then(data => {
+                if(!data) return;
+                
+                missionDays.forEach(day => {
+                    const el = document.getElementById(day.id);
+                    if(data.checked && data.checked.includes(day.id)) {
+                        el.classList.add('checked');
+                    } else {
+                        el.classList.remove('checked');
+                    }
+                });
+
+                if(data.heartMsg && data.heartMsg !== "") {
+                    document.getElementById('statusMessage').innerText = data.heartMsg;
+                }
+
+                if(data.photoCami && data.photoCami !== localStorage.getItem('p_Cami')) {
+                    localStorage.setItem('p_Cami', data.photoCami);
+                    document.getElementById('previewCami').innerHTML = `<img src="${data.photoCami}">`;
+                }
+                if(data.photoEmi && data.photoEmi !== localStorage.getItem('p_Emi')) {
+                    localStorage.setItem('p_Emi', data.photoEmi);
+                    document.getElementById('previewEmi').innerHTML = `<img src="${data.photoEmi}">`;
+                }
+            }).catch(err => console.log("Eroare incarcare: ", err));
+        }
+
+        function uploadPhoto(input, user) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = 400; 
+                        canvas.height = 300;
+                        ctx.drawImage(img, 0, 0, 400, 300);
+                        const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+                        
+                        localStorage.setItem('p_' + user, compressedData);
+                        document.getElementById('preview' + user).innerHTML = `<img src="${compressedData}">`;
+                        saveDataOnline();
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // INTEGRARE EMAIL (Sistem asincron pentru notificarea prin FormSubmit)
+        function sendHeart() {
+            const currentHour = new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('statusMessage').innerText = `❤️ Mi-e dor de tine! (${currentHour})`;
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+            saveDataOnline();
+
+            // Trimitere email securizat in fundal catre Emi
+            const formData = new FormData();
+            formData.append('Mesaj', 'Mi-e dor de tine! ❤️');
+            formData.append('Ora Trimiterii', currentHour);
+            formData.append('_subject', 'Cami se gândește la tine! 🥰');
+            formData.append('_captcha', 'false'); // Dezactiveaza verificarea robotilor pentru a functiona instant
+
+            fetch('https://formsubmit.co/ajax/emi.rotaru666@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => console.log('Notificare trimisă cu succes!'))
+            .catch(err => console.log('Eroare la trimiterea notificării:', err));
+        }
+    </script>
+</body>
+</html>
